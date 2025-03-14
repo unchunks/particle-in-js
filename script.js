@@ -128,6 +128,7 @@ function spawnParticles(event, count, sizeMin, sizeMax, speedMin, speedMax, damp
     if (event.type.startsWith('touch')) event.preventDefault(); // スクロール防止
 }
 
+// マウスクリック
 canvas.addEventListener('click', (e) => 
     makeParticles(
         30,     /* 作る数 */
@@ -138,14 +139,17 @@ canvas.addEventListener('click', (e) =>
         0.05    /* サイズの減衰 */
     )
 );
+// マウスドラッグ
 canvas.addEventListener('mousemove', (e) => 
     spawnParticles(e, 10, 1, 3, 0, 1, 0.01))
 ;
-canvas.addEventListener('touchstart', (e) => 
-    spawnParticles(e, 10, 1, 3, 0, 1, 0.01)
-);
+// タップ
 canvas.addEventListener('touchend', (e) => 
     spawnParticles(e, 30, 5, 10, 0, 3, 0.05)
+);
+// スワイプ
+canvas.addEventListener('touchmove', (e) => 
+    spawnParticles(e, 10, 1, 3, 0, 1, 0.01)
 );
 
 // Particle クラス（Shape と Movable を統合）
