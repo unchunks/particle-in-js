@@ -115,19 +115,20 @@ const mouse = {
     x: undefined,
     y: undefined,
 };
+
 function updateMousePosition(event) {
-    if (event.touches) {
-        mouse.x = event.touches[0].clientX;
-        mouse.y = event.touches[0].clientY;
-    } else {
-        mouse.x = event.x;
-        mouse.y = event.y;
-    }
+    const touch = event.touches ? event.touches[0] : event;
+    mouse.x = touch.clientX;
+    mouse.y = touch.clientY;
 }
 
-// マウスクリック時
-canvas.addEventListener('click', function (event) {
+function spawnParticles(event, count, sizeMin, sizeMax, speedMin, speedMax, damping) {
     updateMousePosition(event);
+    makeParticles(count, sizeMin, sizeMax, speedMin, speedMax, damping);
+    if (event.type.startsWith('touch')) event.preventDefault(); // スクロール防止
+}
+
+canvas.addEventListener('click', (e) => 
     makeParticles(
         30,     /* 作る数 */
         5,      /* 最小サイズ */
@@ -135,21 +136,17 @@ canvas.addEventListener('click', function (event) {
         0,      /* 最小スピード */
         3,      /* 最大スピード */
         0.05    /* サイズの減衰 */
-    );
-});
-
-// マウス移動時
-canvas.addEventListener('mousemove', function (event) {
-    updateMousePosition(event);
-    makeParticles(
-        10,     /* 作る数 */
-        1,      /* 最小サイズ */
-        3,      /* 最大サイズ */
-        0,      /* 最小スピード */
-        1,      /* 最大スピード */
-        0.01    /* サイズの減衰 */
-    );
-});
+    )
+);
+canvas.addEventListener('mousemove', (e) => 
+    spawnParticles(e, 10, 1, 3, 0, 1, 0.01))
+;
+canvas.addEventListener('touchstart', (e) => 
+    spawnParticles(e, 10, 1, 3, 0, 1, 0.01)
+);
+canvas.addEventListener('touchend', (e) => 
+    spawnParticles(e, 30, 5, 10, 0, 3, 0.05)
+);
 
 // Particle クラス（Shape と Movable を統合）
 class Particle {
