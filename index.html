@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas basics</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ボタンのスタイル */
+        .controls {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <!-- ボタンのコントロールパネル -->
+    <div class="controls">
+        <h3>Shape</h3>
+        <button id="circleBtn">Circle</button>
+        <button id="triangleBtn">Triangle</button>
+        <button id="squareBtn">Square</button>
+        <button id="starBtn">Star</button>
+        <button id="heartBtn">Heart</button>
+
+        <h3>Movable</h3>
+        <button id="straightBtn">Straight</button>
+        <button id="zigzagBtn">Zigzag</button>
+        <button id="circularBtn">Circular</button>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
