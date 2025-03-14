@@ -131,26 +131,38 @@ function handleParticles() {
 function findClosestParticles(particle, index) {
     const candidates = [];
 
+    // 近いパーティクルを求める
+    let closestParticles = [];
     for (let j = 0; j < particleArray.length; j++) {
         if (index === j) continue;
 
-        const other = particleArray[j];
-        const dx = particle.movable.x - other.movable.x;
-        const dy = particle.movable.y - other.movable.y;
+        const dx = particleArray[index].movable.x - particleArray[j].movable.x;
+        const dy = particleArray[index].movable.y - particleArray[j].movable.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-
-        candidates.push({ particle: other, distance });
+        
+        // 近いパーティクルを3つまで保存
+        if (closestParticles.length < 3) {
+            closestParticles.push({ particle: particleArray[j], distance });
+        } else {
+            // 配列の中で一番遠いものと比較し、距離が近ければ入れ替え
+            let maxIndex = closestParticles.reduce((maxIdx, p, idx, arr) => 
+                p.distance > arr[maxIdx].distance ? idx : maxIdx, 0);
+            
+            if (distance < closestParticles[maxIndex].distance) {
+                closestParticles[maxIndex] = { particle: particleArray[j], distance };
+            }
+        }
     }
 
-    // 距離でソートし、最初の3つを取得
-    return candidates.sort((a, b) => a.distance - b.distance).slice(0, 3);
+    return closestParticles;
 }
 
+// パーティクルと線を描画
 function drawConnectionLines(particle, connections) {
     connections.forEach(({ particle: other, distance }) => {
         ctx.beginPath();
         ctx.strokeStyle = particle.shape.color;
-        ctx.lineWidth = 1 + (500 - distance) / 100;
+        ctx.lineWidth = 1;
         ctx.globalAlpha = 1 - distance / 500;
         ctx.moveTo(particle.movable.x, particle.movable.y);
         ctx.lineTo(other.movable.x, other.movable.y);
