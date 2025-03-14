@@ -27,18 +27,18 @@ let selectedMovable = "StraightMovable";
 const particleNum = document.getElementById('particleNum');
 
 // 各ボタンを取得
-const circleBtn = document.getElementById('circleBtn');
-const triangleBtn = document.getElementById('triangleBtn');
-const squareBtn = document.getElementById('squareBtn');
-const starBtn = document.getElementById('starBtn');
-const heartBtn = document.getElementById('heartBtn');
+const circleBtn = document.getElementById('circle-button');
+const triangleBtn = document.getElementById('triangle-button');
+const squareBtn = document.getElementById('square-button');
+const starBtn = document.getElementById('star-button');
+const heartBtn = document.getElementById('heart-button');
 
-const straightBtn = document.getElementById('straightBtn');
-const zigzagBtn = document.getElementById('zigzagBtn');
-const circularBtn = document.getElementById('circularBtn');
+const straightBtn = document.getElementById('straight-button');
+const zigzagBtn = document.getElementById('zigzag-button');
+const circularBtn = document.getElementById('circular-button');
 
-circleBtn.style.backgroundColor = 'lightblue';
-straightBtn.style.backgroundColor = 'lightblue';
+// チェックボックスの要素を取得
+const drawLineCheckbox = document.getElementById("draw-line");
 
 // ボタンのスタイルをリセットする関数
 function resetShapeButtonStyles() {
@@ -181,42 +181,44 @@ function handleParticles() {
         particleArray[i].update();
         particleArray[i].draw(ctx);
 
-        // 近いパーティクルを求める
-        let closestParticles = [];
-        for (let j = 0; j < particleArray.length; j++) {
-            if (i !== j) {
-                const dx = particleArray[i].movable.x - particleArray[j].movable.x;
-                const dy = particleArray[i].movable.y - particleArray[j].movable.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                // 近いパーティクルを3つまで保存
-                if (closestParticles.length < 3) {
-                    closestParticles.push({ particle: particleArray[j], distance });
-                } else {
-                    // 配列の中で一番遠いものと比較し、距離が近ければ入れ替え
-                    let maxIndex = closestParticles.reduce((maxIdx, p, idx, arr) => 
-                        p.distance > arr[maxIdx].distance ? idx : maxIdx, 0);
+        if (drawLineCheckbox.checked) {
+            // 近いパーティクルを求める
+            let closestParticles = [];
+            for (let j = 0; j < particleArray.length; j++) {
+                if (i !== j) {
+                    const dx = particleArray[i].movable.x - particleArray[j].movable.x;
+                    const dy = particleArray[i].movable.y - particleArray[j].movable.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
                     
-                    if (distance < closestParticles[maxIndex].distance) {
-                        closestParticles[maxIndex] = { particle: particleArray[j], distance };
+                    // 近いパーティクルを3つまで保存
+                    if (closestParticles.length < 3) {
+                        closestParticles.push({ particle: particleArray[j], distance });
+                    } else {
+                        // 配列の中で一番遠いものと比較し、距離が近ければ入れ替え
+                        let maxIndex = closestParticles.reduce((maxIdx, p, idx, arr) => 
+                            p.distance > arr[maxIdx].distance ? idx : maxIdx, 0);
+                        
+                        if (distance < closestParticles[maxIndex].distance) {
+                            closestParticles[maxIndex] = { particle: particleArray[j], distance };
+                        }
                     }
                 }
             }
+
+            // パーティクルと線を描画
+            closestParticles.forEach(({ particle }) => {
+                ctx.beginPath();
+                ctx.strokeStyle = particleArray[i].shape.color;
+                ctx.lineWidth = 1 + (500 - particle.distance) / 100; // 距離に応じた線の太さ
+                ctx.globalAlpha = 1 - particle.distance / 500; // 距離に応じた透明度
+                ctx.moveTo(particleArray[i].movable.x, particleArray[i].movable.y);
+                ctx.lineTo(particle.movable.x, particle.movable.y);
+                ctx.stroke();
+                ctx.closePath();
+            });
+
+            ctx.globalAlpha = 1; // 透明度をリセット
         }
-
-        // 近いパーティクルと線を描画
-        closestParticles.forEach(({ particle }) => {
-            ctx.beginPath();
-            ctx.strokeStyle = particleArray[i].shape.color;
-            ctx.lineWidth = 1 + (500 - particle.distance) / 100; // 距離に応じた線の太さ
-            ctx.globalAlpha = 1 - particle.distance / 500; // 距離に応じた透明度
-            ctx.moveTo(particleArray[i].movable.x, particleArray[i].movable.y);
-            ctx.lineTo(particle.movable.x, particle.movable.y);
-            ctx.stroke();
-            ctx.closePath();
-        });
-
-        ctx.globalAlpha = 1; // 透明度をリセット
 
         // パーティクルのサイズが小さくなったら削除
         if (particleArray[i].shape.size <= 0) {
@@ -240,4 +242,6 @@ function animate() {
 }
 
 // アニメーション開始
+circleBtn.style.backgroundColor = 'lightblue';
+straightBtn.style.backgroundColor = 'lightblue';
 animate();

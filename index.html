@@ -5,31 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canvas basics</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* ボタンのスタイル */
-        .controls {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        button {
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
@@ -39,16 +14,22 @@
         <h3 id="particleNum">0個</h3>
 
         <h3>Shape</h3>
-        <button id="circleBtn">Circle</button>
-        <button id="triangleBtn">Triangle</button>
-        <button id="squareBtn">Square</button>
-        <button id="starBtn">Star</button>
-        <button id="heartBtn">Heart</button>
+        <button id="circle-button">Circle</button>
+        <button id="triangle-button">Triangle</button>
+        <button id="square-button">Square</button>
+        <button id="star-button">Star</button>
+        <button id="heart-button">Heart</button>
 
         <h3>Movable</h3>
-        <button id="straightBtn">Straight</button>
-        <button id="zigzagBtn">Zigzag</button>
-        <button id="circularBtn">Circular</button>
+        <button id="straight-button">Straight</button>
+        <button id="zigzag-button">Zigzag</button>
+        <button id="circular-button">Circular</button>
+
+        <h3>Line</h3>
+        <div class="item-frame">
+            <input type='checkbox' id='draw-line'/>
+            <label>線を描画する</label>
+        </div>
     </div>
 
     <script type="module" src="script.js"></script>
