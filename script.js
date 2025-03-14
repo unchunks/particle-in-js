@@ -115,11 +115,19 @@ const mouse = {
     x: undefined,
     y: undefined,
 };
+function updateMousePosition(event) {
+    if (event.touches) {
+        mouse.x = event.touches[0].clientX;
+        mouse.y = event.touches[0].clientY;
+    } else {
+        mouse.x = event.x;
+        mouse.y = event.y;
+    }
+}
 
 // マウスクリック時
 canvas.addEventListener('click', function (event) {
-    mouse.x = event.x;
-    mouse.y = event.y;
+    updateMousePosition(event);
     makeParticles(
         30,     /* 作る数 */
         5,      /* 最小サイズ */
@@ -132,8 +140,7 @@ canvas.addEventListener('click', function (event) {
 
 // マウス移動時
 canvas.addEventListener('mousemove', function (event) {
-    mouse.x = event.x;
-    mouse.y = event.y;
+    updateMousePosition(event);
     makeParticles(
         10,     /* 作る数 */
         1,      /* 最小サイズ */
