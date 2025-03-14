@@ -92,19 +92,6 @@ class Star extends Shape {
         
         // 上の角からスタート
         ctx.moveTo(x + Math.cos(rotation) * outerRadius, y + Math.sin(rotation) * outerRadius);
-        // for (let i = 0; i < spikes; i++) {
-        //     // 中心に戻る
-        //     let x1 = x + Math.cos(rotation) * outerRadius;
-        //     let y1 = y + Math.sin(rotation) * outerRadius;
-        //     ctx.lineTo(x1, y1);
-        //     rotation += step;
-
-        //     // 
-        //     let x2 = x + Math.cos(rotation) * innerRadius;
-        //     let y2 = y + Math.sin(rotation) * innerRadius;
-        //     ctx.lineTo(x2, y2);
-        //     rotation += step;
-        // }
         for (let i = 0; i < spikes; i++) {
             rotation += step;
             let x1 = x + Math.cos(rotation) * innerRadius;
