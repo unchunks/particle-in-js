@@ -5,13 +5,21 @@ class Shape {
             throw new Error("Cannot instantiate abstract class Shape directly.");
         }
         this.size = Math.random() * (sizeMax - sizeMin) + sizeMin;
-        this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+
+        // 色を変化させるための変数
+        this.hue = Math.random() * 360;
+        this.color = `hsl(${this.hue}, 100%, 50%)`;
+
         this.damping = damping;
     }
 
     update() {
         // サイズが小さくなりすぎないようにする
-        this.size = Math.max(0.2, this.size - this.damping);
+        this.size = Math.max(0, this.size - this.damping);
+
+        // 色相を変化させる
+        this.hue += 0;
+        this.color = `hsl(${this.hue}, 100%, 50%)`;
     }
 
     draw(ctx, x, y) {
@@ -72,23 +80,41 @@ class Star extends Shape {
     draw(ctx, x, y) {
         ctx.fillStyle = this.color;
         ctx.beginPath();
+        // 角の数
         const spikes = 5;
+        // 外側の半径
         const outerRadius = this.size;
+        // 内側の半径
         const innerRadius = this.size / 2;
+        // 
         let rotation = Math.PI / 2 * 3;
         let step = Math.PI / spikes;
         
-        ctx.moveTo(x, y - outerRadius);
-        for (let i = 0; i < spikes; i++) {
-            let x1 = x + Math.cos(rotation) * outerRadius;
-            let y1 = y + Math.sin(rotation) * outerRadius;
-            ctx.lineTo(x1, y1);
-            rotation += step;
+        // 上の角からスタート
+        ctx.moveTo(x + Math.cos(rotation) * outerRadius, y + Math.sin(rotation) * outerRadius);
+        // for (let i = 0; i < spikes; i++) {
+        //     // 中心に戻る
+        //     let x1 = x + Math.cos(rotation) * outerRadius;
+        //     let y1 = y + Math.sin(rotation) * outerRadius;
+        //     ctx.lineTo(x1, y1);
+        //     rotation += step;
 
-            let x2 = x + Math.cos(rotation) * innerRadius;
-            let y2 = y + Math.sin(rotation) * innerRadius;
-            ctx.lineTo(x2, y2);
+        //     // 
+        //     let x2 = x + Math.cos(rotation) * innerRadius;
+        //     let y2 = y + Math.sin(rotation) * innerRadius;
+        //     ctx.lineTo(x2, y2);
+        //     rotation += step;
+        // }
+        for (let i = 0; i < spikes; i++) {
             rotation += step;
+            let x1 = x + Math.cos(rotation) * innerRadius;
+            let y1 = y + Math.sin(rotation) * innerRadius;
+            ctx.lineTo(x1, y1);
+
+            rotation += step;
+            let x2 = x + Math.cos(rotation) * outerRadius;
+            let y2 = y + Math.sin(rotation) * outerRadius;
+            ctx.lineTo(x2, y2);
         }
         ctx.closePath();
         ctx.fill();

@@ -11,15 +11,9 @@ canvas.height = window.innerHeight;
 
 // パーティクルを格納する配列
 const particleArray = [];
+
+// パーティクルの最大数
 const MAX_PARTICLE_NUM = 1000;
-
-const SIZE_MIN = 1;
-const SIZE_MAX = 10;
-const SPEED = 5;
-const DAMPING = 0.02;
-
-// 色を変化させるための変数
-let hue = 0;
 
 // Shape と Movable の種類
 const shapeTypes = { Circle, Triangle, Square, Star, Heart };
@@ -28,6 +22,9 @@ const movableTypes = { StraightMovable, ZigzagMovable, CircularMovable };
 // 初期選択
 let selectedShape = "Circle";
 let selectedMovable = "StraightMovable";
+
+// パーティクルの数を表示するテキスト
+const particleNum = document.getElementById('particleNum');
 
 // 各ボタンを取得
 const circleBtn = document.getElementById('circleBtn');
@@ -123,25 +120,39 @@ const mouse = {
 canvas.addEventListener('click', function (event) {
     mouse.x = event.x;
     mouse.y = event.y;
-    makeParticles(100);
+    makeParticles(
+        30,     /* 作る数 */
+        5,      /* 最小サイズ */
+        10,     /* 最大サイズ */
+        0,      /* 最小スピード */
+        3,      /* 最大スピード */
+        0.05    /* サイズの減衰 */
+    );
 });
 
 // マウス移動時
 canvas.addEventListener('mousemove', function (event) {
     mouse.x = event.x;
     mouse.y = event.y;
-    makeParticles(1);
+    makeParticles(
+        10,     /* 作る数 */
+        1,      /* 最小サイズ */
+        3,      /* 最大サイズ */
+        0,      /* 最小スピード */
+        1,      /* 最大スピード */
+        0.01    /* サイズの減衰 */
+    );
 });
 
 // Particle クラス（Shape と Movable を統合）
 class Particle {
-    constructor(x, y, sizeMin, sizeMax, speed, damping) {
+    constructor(x, y, sizeMin, sizeMax, minSpeed, maxSpeed, damping) {
         // 選択されたクラスを動的にインスタンス化
         const ShapeClass = shapeTypes[selectedShape];
         const MovableClass = movableTypes[selectedMovable];
 
         this.shape = new ShapeClass(sizeMin, sizeMax, damping);
-        this.movable = new MovableClass(x, y, speed);
+        this.movable = new MovableClass(x, y, minSpeed, maxSpeed);
     }
 
     update() {
@@ -154,9 +165,9 @@ class Particle {
     }
 }
 
-function makeParticles(num) {
+function makeParticles(num, minSize, maxSize, minSpeed, maxSpeed, damping) {
     for (let i = 0; i < num; i++) {
-        particleArray.push(new Particle(mouse.x, mouse.y, SIZE_MIN, SIZE_MAX, SPEED, DAMPING));
+        particleArray.push(new Particle(mouse.x, mouse.y, minSize, maxSize, minSpeed, maxSpeed, damping));
     }
 
     // パーティクルがMAX_PARTICLE_NUMを超えた場合、先頭から削除
@@ -165,50 +176,51 @@ function makeParticles(num) {
     }
 }
 
-// パーティクルを管理する処理
 function handleParticles() {
-    // 他のパーティクルとの距離を計算し、近ければ線を引く
-    for (let i = 0; i < particleArray.length; i++) {
+    for (let i = particleArray.length - 1; i >= 0; i--) {
         particleArray[i].update();
         particleArray[i].draw(ctx);
 
-        // // 各パーティクルとの距離を計算し、配列に格納
-        // let distances = [];
-        // for (let j = 0; j < particleArray.length; j++) {
-        //     if (i !== j) { // 同じパーティクル同士は除外
-        //         const dx = particleArray[i].x - particleArray[j].x;
-        //         const dy = particleArray[i].y - particleArray[j].y;
-        //         const distance = Math.sqrt(dx * dx + dy * dy); // 距離の計算
-        //         distances.push({ distance: distance, index: j });
-        //     }
-        // }
-
-        // // 距離が近い順にソート（昇順）
-        // distances.sort((a, b) => a.distance - b.distance);
-
-        // 近いパーティクル3つに線を引く
-        for (let j = i + 1; j < Math.min(3, particleArray.length); j++) {
-            // const j = distances[k].index;
-            const dx = particleArray[i].movable.x - particleArray[j].movable.x;
-            const dy = particleArray[i].movable.y - particleArray[j].movable.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            // 距離が近ければ線を引く
-            if (distance < 50) {
-                ctx.beginPath();
-                ctx.strokeStyle = particleArray[i].color;
-                ctx.lineWidth = 1;
-                ctx.moveTo(particleArray[i].movable.x, particleArray[i].movable.y);
-                ctx.lineTo(particleArray[j].movable.x, particleArray[j].movable.y);
-                ctx.stroke();
-                ctx.closePath();
+        // 近いパーティクルを求める
+        let closestParticles = [];
+        for (let j = 0; j < particleArray.length; j++) {
+            if (i !== j) {
+                const dx = particleArray[i].movable.x - particleArray[j].movable.x;
+                const dy = particleArray[i].movable.y - particleArray[j].movable.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // 近いパーティクルを3つまで保存
+                if (closestParticles.length < 3) {
+                    closestParticles.push({ particle: particleArray[j], distance });
+                } else {
+                    // 配列の中で一番遠いものと比較し、距離が近ければ入れ替え
+                    let maxIndex = closestParticles.reduce((maxIdx, p, idx, arr) => 
+                        p.distance > arr[maxIdx].distance ? idx : maxIdx, 0);
+                    
+                    if (distance < closestParticles[maxIndex].distance) {
+                        closestParticles[maxIndex] = { particle: particleArray[j], distance };
+                    }
+                }
             }
         }
+
+        // 近いパーティクルと線を描画
+        closestParticles.forEach(({ particle }) => {
+            ctx.beginPath();
+            ctx.strokeStyle = particleArray[i].shape.color;
+            ctx.lineWidth = 1 + (500 - particle.distance) / 100; // 距離に応じた線の太さ
+            ctx.globalAlpha = 1 - particle.distance / 500; // 距離に応じた透明度
+            ctx.moveTo(particleArray[i].movable.x, particleArray[i].movable.y);
+            ctx.lineTo(particle.movable.x, particle.movable.y);
+            ctx.stroke();
+            ctx.closePath();
+        });
+
+        ctx.globalAlpha = 1; // 透明度をリセット
 
         // パーティクルのサイズが小さくなったら削除
         if (particleArray[i].shape.size <= 0) {
             particleArray.splice(i, 1);
-            i--; // 削除後にインデックスを調整
         }
     }
 }
@@ -220,9 +232,8 @@ function animate() {
     
     // パーティクルを処理
     handleParticles();
-    
-    // 色相を変化させる
-    hue += 5;
+
+    particleNum.textContent = particleArray.length + "個";
 
     // アニメーションを繰り返し呼び出す
     requestAnimationFrame(animate);
