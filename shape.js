@@ -48,11 +48,10 @@ class Triangle extends Shape {
     }
 
     draw(ctx, x, y) {
-        const height = Math.sqrt(3) / 2 * this.size; // 三角形の高さ
         ctx.beginPath();
-        ctx.moveTo(x, y - height / 2); // 上の頂点
-        ctx.lineTo(x - this.size / 2, y + height / 2); // 左下の頂点
-        ctx.lineTo(x + this.size / 2, y + height / 2); // 右下の頂点
+        ctx.moveTo(x, y - this.size); // 上の頂点
+        ctx.lineTo(x - this.size * Math.sqrt(3) / 2, y + this.size / 2); // 左下の頂点
+        ctx.lineTo(x + this.size * Math.sqrt(3) / 2, y + this.size / 2); // 右下の頂点
         ctx.closePath();
         ctx.fillStyle = this.color;
         ctx.fill();
@@ -67,7 +66,7 @@ class Square extends Shape {
 
     draw(ctx, x, y) {
         ctx.fillStyle = this.color;
-        ctx.fillRect(x - this.size / 2, y - this.size / 2, this.size, this.size);
+        ctx.fillRect(x - this.size, y - this.size, this.size * 2, this.size * 2);
     }
 }
 
@@ -116,16 +115,27 @@ class Heart extends Shape {
 
     draw(ctx, x, y) {
         ctx.beginPath();
-        ctx.moveTo(x, y + this.size / 4);
+        ctx.moveTo(x, y + this.size);
         ctx.bezierCurveTo(
-            x - this.size / 2, y - this.size / 2,
+            x            , y + this.size / 2,
             x - this.size, y + this.size / 4,
-            x, y + this.size
+            x - this.size, y - this.size / 2,
+        );
+        ctx.bezierCurveTo(
+            x - this.size, y - this.size * 1.2,
+            x, y - this.size,
+            x, y - this.size / 2
+        );
+
+        ctx.bezierCurveTo(
+            x, y - this.size,
+            x + this.size, y - this.size * 1.2,
+            x + this.size, y - this.size / 2
         );
         ctx.bezierCurveTo(
             x + this.size, y + this.size / 4,
-            x + this.size / 2, y - this.size / 2,
-            x, y + this.size / 4
+            x            , y + this.size / 2,
+            x, y + this.size
         );
         ctx.closePath();
         ctx.fillStyle = this.color;
