@@ -1,4 +1,4 @@
-import { Shape, Circle, Triangle, Square, Star, Heart } from "./shape.js";
+import { Shape, Circle, Triangle, Square, Star, Heart, Custom } from "./shape.js";
 import { Movable, StraightMovable, ZigzagMovable, CircularMovable } from "./movable.js";
 
 // キャンバスのセットアップ
@@ -12,7 +12,7 @@ const particleArray = [];
 // パーティクルの最大数
 const MAX_PARTICLE_NUM = 1000;
 // Shape と Movable の種類
-const shapeTypes = { Circle, Triangle, Square, Star, Heart };
+const shapeTypes = { Circle, Triangle, Square, Star, Heart, Custom };
 const movableTypes = { StraightMovable, ZigzagMovable, CircularMovable };
 // 選択中の種類
 let selectedShape = "Circle";
@@ -28,7 +28,8 @@ const buttons = {
         triangle: document.getElementById('triangle-button'),
         square: document.getElementById('square-button'),
         star: document.getElementById('star-button'),
-        heart: document.getElementById('heart-button')
+        heart: document.getElementById('heart-button'),
+        custom: document.getElementById('custom-button')
     },
     moves: {
         straight: document.getElementById('straight-button'),

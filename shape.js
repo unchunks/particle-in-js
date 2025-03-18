@@ -143,6 +143,72 @@ class Heart extends Shape {
     }
 }
 
+// Custom クラス
+class Custom extends Shape {
+    constructor(sizeMin, sizeMax, damping) {
+        super(sizeMin, sizeMax, damping);
+    }
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~自由に書き換えてみてね~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    draw(ctx, x, y) {   // x と y は、図形の中心座標です
+
+        // 変数の定義
+        let radian = this.size; // this.size は図形の外接円の半径です
+
+        // 必須　描画パスの指定開始
+        ctx.beginPath();
+
+
+        // 描き始めを設定
+        ctx.moveTo(
+            x,          // 移動先のX座標
+            y           // 移動先のY座標
+        );
+
+        // 線を描く
+        ctx.lineTo(
+            x,          // 移動先のX座標
+            y           // 移動先のY座標
+        );
+
+        // 弧を描く
+        ctx.arc(
+            x,          // 中心座標のX座標
+            y,          // 中心座標のY座標
+            radian,     // 半径
+            0,          // 描き始めの角度（ラジアン）
+            Math.PI,    // 描き終わりの角度（ラジアン）
+            true        // trueだと反時計回り、falseだと時計回りに描き進める
+        );
+
+        // ベジェ曲線を描く
+        ctx.bezierCurveTo(
+            x, y,       // 制御点1の座標
+            x, y,       // 制御点2の座標
+            x, y,       // 終点の座標
+        );
+
+
+        // 必須　描画パスの指定終了
+        ctx.closePath();
+
+        ctx.fillStyle = this.color;     // 塗りつぶす色（this.colorはランダムな色を設定しています）
+        // 以下のように色を指定することもできます
+        // ctx.fillStyle = "orange";
+        // ctx.fillStyle = "#FFA500";
+        // ctx.fillStyle = "rgb(255 165 0)";
+        // ctx.fillStyle = "rgb(255 165 0 / 100%)";    // 最後の100%は不透明度
+        // ctx.fillRect = "hsl(38, 100%, 50%)";
+        ctx.fill();                     // 塗りつぶしを実行
+
+        ctx.strokeStyle = 'white'       // 線の色
+        ctx.stroke();                   // 枠線の描画を実行
+    }
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ここまで~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+
 
 // モジュールとしてエクスポート
-export { Shape, Circle, Triangle, Square, Star, Heart };
+export { Shape, Circle, Triangle, Square, Star, Heart, Custom };
