@@ -110,7 +110,7 @@ function spawnParticles(event, count, sizeMin, sizeMax, speedMin, speedMax, damp
 
 // アニメーションとパーティクル管理
 function handleParticles() {
-    for (let i = particleArray.length - 1; i >= 0; i--) {
+    for (let i = 0; i < particleArray.length; i++) {
         const particle = particleArray[i];
         particle.update();
         particle.draw(ctx);
@@ -129,8 +129,6 @@ function handleParticles() {
 }
 
 function findClosestParticles(particle, index) {
-    const candidates = [];
-
     // 近いパーティクルを求める
     let closestParticles = [];
     for (let j = 0; j < particleArray.length; j++) {
@@ -192,16 +190,16 @@ function setupEvents() {
 
     // マウス/タッチイベントごとのパーティクル設定
     canvas.addEventListener('click', e =>
-        spawnParticles(e, 30, 5, 10, 0, 3, 0.05));
+        spawnParticles(e, 30, 10, 20, 0, 3, 0.05));
 
     canvas.addEventListener('mousemove', e =>
-        spawnParticles(e, 10, 1, 3, 0, 1, 0.01));
+        spawnParticles(e, 1, 3, 8, 0, 1, 0.01));
 
     canvas.addEventListener('touchend', e =>
-        spawnParticles(e, 30, 5, 10, 0, 3, 0.05));
+        spawnParticles(e, 30, 10, 20, 0, 3, 0.05));
 
     canvas.addEventListener('touchmove', e =>
-        spawnParticles(e, 10, 1, 3, 0, 1, 0.01));
+        spawnParticles(e, 1, 3, 8, 0, 1, 0.01));
 }
 
 // 初期化と開始
