@@ -85,7 +85,7 @@ class Star extends Shape {
         const outerRadius = this.size;
         // 内側の半径
         const innerRadius = this.size / 2;
-        // 
+        // 描き始めの角度
         let rotation = Math.PI / 2 * 3;
         let step = Math.PI / spikes;
         
@@ -178,7 +178,7 @@ class Custom extends Shape {
             y,          // 中心座標のY座標
             radian,     // 半径
             0,          // 描き始めの角度（ラジアン）
-            Math.PI,    // 描き終わりの角度（ラジアン）
+            Math.PI / 2,    // 描き終わりの角度（ラジアン）
             true        // trueだと反時計回り、falseだと時計回りに描き進める
         );
 
@@ -202,6 +202,7 @@ class Custom extends Shape {
         // ctx.fillRect = "hsl(38, 100%, 50%)";
         ctx.fill();                     // 塗りつぶしを実行
 
+        ctx.lineWidth = 1;              // 線の太さ
         ctx.strokeStyle = 'white'       // 線の色
         ctx.stroke();                   // 枠線の描画を実行
     }
