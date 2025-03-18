@@ -40,7 +40,7 @@ class ZigzagMovable extends Movable {
         this.centerX = x;
         this.centerY = y;
         // 正弦波運動の振幅
-        this.amplitude = this.speed ** 2;
+        this.amplitude = Math.random() * (this.speed * 5) + 10;
         // 正弦波の周波数
         this.frequency = Math.random() / 3;
         this.theta = 0;
