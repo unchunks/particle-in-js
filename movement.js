@@ -1,8 +1,8 @@
-// Movable 抽象クラス（基本の移動機能）
-class Movable {
+// Movement 抽象クラス（基本の移動機能）
+class Movement {
     constructor(x, y, minSpeed, maxSpeed) {
-        if (new.target === Movable) {
-            throw new Error("Cannot instantiate abstract class Movable directly.");
+        if (new.target === Movement) {
+            throw new Error("Cannot instantiate abstract class Movement directly.");
         }
         this.x = x;
         this.y = y;
@@ -19,7 +19,7 @@ class Movable {
 }
 
 // 直線的に動くクラス
-class StraightMovable extends Movable {
+class Straight extends Movement {
     constructor(x, y, minSpeed, maxSpeed) {
         super(x, y, minSpeed, maxSpeed);
     }
@@ -34,7 +34,7 @@ class StraightMovable extends Movable {
 }
 
 // ジグザグに動くクラス
-class ZigzagMovable extends Movable {
+class Zigzag extends Movement {
     constructor(x, y, minSpeed, maxSpeed) {
         super(x, y, minSpeed, maxSpeed);
         this.centerX = x;
@@ -74,7 +74,7 @@ class ZigzagMovable extends Movable {
 }
 
 // 円を描くように動くクラス
-class CircularMovable extends Movable {
+class Circular extends Movement {
     constructor(x, y, minSpeed, maxSpeed) {
         super(x, y, minSpeed, maxSpeed);
         this.centerX = x;
@@ -91,4 +91,4 @@ class CircularMovable extends Movable {
 }
 
 // モジュールとしてエクスポート
-export { Movable, StraightMovable, ZigzagMovable, CircularMovable };
+export { Movement, Straight, Zigzag, Circular };

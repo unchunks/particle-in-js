@@ -1,5 +1,5 @@
 import { Shape, Circle, Triangle, Square, Star, Heart, Custom } from "./shape.js";
-import { Movable, StraightMovable, ZigzagMovable, CircularMovable } from "./movable.js";
+import { Movement, Straight, Zigzag, Circular } from "./movement.js";
 
 // キャンバスのセットアップ
 const canvas = document.getElementById('canvas');
@@ -13,30 +13,26 @@ const particleArray = [];
 const MAX_PARTICLE_NUM = 1000;
 // Shape と Movable の種類
 const shapeTypes = { Circle, Triangle, Square, Star, Heart, Custom };
-const movableTypes = { StraightMovable, ZigzagMovable, CircularMovable };
+const movableTypes = { Straight, Zigzag, Circular };
 // 選択中の種類
 let selectedShape = "Circle";
-let selectedMovable = "StraightMovable";
+let selectedMovable = "Straight";
+
+const shapeSelect = document.getElementById('shape-select');
+const movementSelect = document.getElementById('movement-select');
+
+shapeSelect.addEventListener('change', (e) => {
+    selectedShape = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1);
+});
+movementSelect.addEventListener('change', (e) => {
+    selectedMovable = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1);
+});
+
 const mouse = { x: undefined, y: undefined };
 
 // DOM要素
 const particleNum = document.getElementById('particleNum');
 const drawLineCheckbox = document.getElementById("draw-line");
-const buttons = {
-    shapes: {
-        circle: document.getElementById('circle-button'),
-        triangle: document.getElementById('triangle-button'),
-        square: document.getElementById('square-button'),
-        star: document.getElementById('star-button'),
-        heart: document.getElementById('heart-button'),
-        custom: document.getElementById('custom-button')
-    },
-    moves: {
-        straight: document.getElementById('straight-button'),
-        zigzag: document.getElementById('zigzag-button'),
-        circular: document.getElementById('circular-button')
-    }
-};
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~クラス~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -61,31 +57,6 @@ class Particle {
 }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~関数~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-// ボタンの機能設定
-function setupButtons() {
-    // 形状ボタン
-    Object.entries(buttons.shapes).forEach(([type, button]) => {
-        button.addEventListener('click', () => {
-            Object.values(buttons.shapes).forEach(btn => btn.style.backgroundColor = '');
-            button.style.backgroundColor = 'lightblue';
-            selectedShape = type.charAt(0).toUpperCase() + type.slice(1);
-        });
-    });
-
-    // 移動ボタン
-    Object.entries(buttons.moves).forEach(([type, button]) => {
-        button.addEventListener('click', () => {
-            Object.values(buttons.moves).forEach(btn => btn.style.backgroundColor = '');
-            button.style.backgroundColor = 'lightblue';
-            selectedMovable = type.charAt(0).toUpperCase() + type.slice(1) + "Movable";
-        });
-    });
-
-    // 初期選択ボタンの設定
-    buttons.shapes.circle.style.backgroundColor = 'lightblue';
-    buttons.moves.straight.style.backgroundColor = 'lightblue';
-}
 
 // イベントハンドラ
 function updateMousePosition(event) {
@@ -204,6 +175,5 @@ function setupEvents() {
 }
 
 // 初期化と開始
-setupButtons();
 setupEvents();
 animate();
