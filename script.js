@@ -21,6 +21,15 @@ let selectedMovable = "Straight";
 const shapeSelect = document.getElementById('shape-select');
 const movementSelect = document.getElementById('movement-select');
 
+const mouse = { x: undefined, y: undefined };
+
+const particleNum = document.getElementById('particleNum');
+
+const drawLineCheckbox = document.getElementById("draw-line");
+const drawLineLabel = document.getElementById("draw-line-label");
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~イベントリスナー~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 shapeSelect.addEventListener('change', (e) => {
     selectedShape = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1);
 });
@@ -28,11 +37,9 @@ movementSelect.addEventListener('change', (e) => {
     selectedMovable = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1);
 });
 
-const mouse = { x: undefined, y: undefined };
-
-// DOM要素
-const particleNum = document.getElementById('particleNum');
-const drawLineCheckbox = document.getElementById("draw-line");
+drawLineLabel.addEventListener('click', () => {
+    drawLineCheckbox.checked = !drawLineCheckbox.checked;
+});
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~クラス~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
