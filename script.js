@@ -10,7 +10,7 @@ canvas.height = window.innerHeight;
 // パーティクルを格納する配列
 const particleArray = [];
 // パーティクルの最大数
-const MAX_PARTICLE_NUM = 1000;
+const MAX_PARTICLE_NUM = 500;
 // Shape と Movable の種類
 const shapeTypes = { Circle, Triangle, Square, Star, Heart, Custom };
 const movableTypes = { Straight, Zigzag, Circular };
