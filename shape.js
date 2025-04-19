@@ -82,9 +82,9 @@ class Star extends Shape {
         ctx.beginPath();
         // 角の数
         const spikes = 5;
-        // 外側の半径
+        // 外接円の半径
         const outerRadius = this.size;
-        // 内側の半径
+        // 内接円の半径
         const innerRadius = this.size / 2;
         // 描き始めの角度
         let rotation = Math.PI / 2 * 3;
